@@ -1,5 +1,5 @@
 var currentUserID;
-var targetUserID;
+var currentRoomID;
 var database;
 
 const firebaseConfig = {
@@ -11,6 +11,7 @@ const firebaseConfig = {
     appId: "1:357288103616:web:3eb5638c69a058bd556725"
   };
   
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
@@ -42,19 +43,19 @@ $(document).ready(function() {
   });
 
   $('#connect').click(function() {
-    const searchUserID = $('#search-user').val();
-    if (searchUserID && searchUserID !== currentUserID) {
-      targetUserID = searchUserID;
-      $('#search-screen').hide();
+    const roomID = $('#search-room').val();
+    if (roomID && roomID.length === 6) {
+      currentRoomID = roomID;
+      $('#room-search').hide();
       $('#chat-section').show();
-      displayMessages(currentUserID, targetUserID);
+      displayMessages(currentRoomID);
     }
   });
 
   $('#send').click(function() {
     const message = $('#message').val();
     if (message) {
-      sendMessage(currentUserID, targetUserID, message);
+      sendMessage(currentUserID, currentRoomID, message);
       $('#message').val('');
     }
   });
@@ -71,16 +72,16 @@ function showChatScreen(user) {
   $('#user-id-display').text(user);
 }
 
-function sendMessage(user, targetUser, message) {
-  const chatRef = database.ref('chats/' + user + '-' + targetUser);
+function sendMessage(user, roomID, message) {
+  const chatRef = database.ref('rooms/' + roomID);
   chatRef.push({
     user: user,
     message: message
   });
 }
 
-function displayMessages(user, targetUser) {
-  const chatRef = database.ref('chats/' + user + '-' + targetUser);
+function displayMessages(roomID) {
+  const chatRef = database.ref('rooms/' + roomID);
   chatRef.on('child_added', function(snapshot) {
     const messageData = snapshot.val();
     appendMessage(messageData.user, messageData.message);
