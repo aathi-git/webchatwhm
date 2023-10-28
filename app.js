@@ -42,6 +42,14 @@ $(document).ready(function() {
     }
   });
 
+  $('#logout').click(function() {
+    // Log out the user and clear their local storage
+    currentUserID = null;
+    localStorage.removeItem('user_id');
+    $('#chat-screen').hide();
+    $('#login-screen').show();
+  });
+
   $('#connect').click(function() {
     const roomID = $('#search-room').val();
     if (roomID && roomID.length === 6) {
