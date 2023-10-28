@@ -1,0 +1,27 @@
+body {
+    background-color: #f8f9fa;
+  }
+  
+  .container {
+    max-width: 600px;
+  }
+  
+  #login-screen, #chat-screen {
+    background-color: #fff;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-top: 20px;
+    box-shadow: 0px 0px 10px #aaa;
+  }
+  
+  #chat {
+    height: 200px;
+    overflow-y: auto;
+  }
+  
+  .btn-block {
+    display: block;
+    width: 100%;
+  }
+  
