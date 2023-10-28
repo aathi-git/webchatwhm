@@ -11,13 +11,14 @@
       <div class="col-md-6 offset-md-3">
         <h1 class="text-center mt-5">Chat App</h1>
         <div id="login-screen">
-          <h2 class="text-center">Enter User ID</h2>
+          <h2 class="text-center">Enter Your Name</h2>
           <div class="form-group">
-            <input type="text" id="user-id" class="form-control" placeholder="User ID">
+            <input type="text" id="user-name" class="form-control" placeholder="Your Name">
             <button id="login" class="btn btn-primary btn-block mt-2">Login</button>
           </div>
         </div>
         <div id="chat-screen" style="display: none;">
+          <h2 class="text-center">Welcome, <span id="user-id-display"></span>!</h2>
           <div class="chat" id="chat">
             <!-- Chat messages will be displayed here -->
           </div>
