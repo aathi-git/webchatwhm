@@ -1,4 +1,5 @@
 var currentUserID; // To store the user's unique ID
+var targetUserID; // To store the user ID of the user to connect to
 
 // Initialize Firebase with your config
 var firebaseConfig = {
@@ -14,11 +15,16 @@ firebase.initializeApp(firebaseConfig);
 $(document).ready(function() {
   const chatScreen = document.getElementById('chat-screen');
   const loginScreen = document.getElementById('login-screen');
+  const searchScreen = document.getElementById('search-screen');
+  const chatSection = document.getElementById('chat-section');
   const messageInput = document.getElementById('message');
   const sendButton = document.getElementById('send');
   const loginButton = document.getElementById('login');
+  const searchButton = document.getElementById('connect');
   const userNameInput = document.getElementById('user-name');
   const userIdDisplay = document.getElementById('user-id-display');
+  const searchUserInput = document.getElementById('search-user');
+  const chat = document.getElementById('chat');
 
   loginButton.addEventListener('click', () => {
     const userName = userNameInput.value;
@@ -38,10 +44,23 @@ $(document).ready(function() {
     }
   });
 
+  searchButton.addEventListener('click', () => {
+    const searchUserID = searchUserInput.value;
+    if (searchUserID && searchUserID !== currentUserID) {
+      // Store the target user's ID and show the chat section
+      targetUserID = searchUserID;
+      searchScreen.style.display = 'none';
+      chatSection.style.display = 'block';
+
+      // Display the target user's ID
+      document.getElementById('target-user-id').innerText = targetUserID;
+    }
+  });
+
   sendButton.addEventListener('click', () => {
     const message = messageInput.value;
     if (message) {
-      sendMessage(currentUserID, message);
+      sendMessage(currentUserID, targetUserID, message);
       messageInput.value = '';
     }
   });
@@ -54,12 +73,13 @@ $(document).ready(function() {
   }
 
   // Function to send a message to Firebase
-  function sendMessage(user, message) {
+  function sendMessage(user, targetUser, message) {
     // Push the message to Firebase (you would need to implement this)
     // Sample implementation:
     const messagesRef = firebase.database().ref('messages');
     messagesRef.push({
       user: user,
+      targetUser: targetUser,
       message: message
     });
   }
@@ -70,10 +90,15 @@ $(document).ready(function() {
 
     messagesRef.on('child_added', function(snapshot) {
       const messageData = snapshot.val();
-      appendMessage(messageData.user, messageData.message);
+      if (
+        (messageData.user === currentUserID && messageData.targetUser === targetUserID) ||
+        (messageData.user === targetUserID && messageData.targetUser === currentUserID)
+      ) {
+        appendMessage(messageData.user, messageData.message);
+      }
     });
   }
-  
+
   // Function to generate a unique user ID
   function generateUniqueID() {
     // You can implement your own logic to generate unique IDs here
